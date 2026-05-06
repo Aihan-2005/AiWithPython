@@ -257,3 +257,5 @@ with tf.Session(target='grpc://localhost:2222',graph=graph) as sess:
 print("\n" + "="*60)
 print("ended")
 print("="*60)
+
+
