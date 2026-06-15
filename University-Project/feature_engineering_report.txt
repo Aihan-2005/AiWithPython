@@ -1,0 +1,70 @@
+================================================================================
+Phase 2 Feature Engineering Summary
+================================================================================
+
+Input file:cleaned_student_version.csv
+Output file :feature_engineered_student_version.csv
+
+Input rows : 1,045,079
+Input columns:11
+Feature dataset rows: 1,045,079
+Model feature columns:23
+
+Important leakage decision:
+-end_time is not included as a modeling feature
+- Speed is not created as feature because it depends on elapsed_seconds
+
+Feature columns:
+-rider_total
+-start_xcoord
+-start_ycoord
+-end_xcoord
+-end_ycoord
+-start_hour
+-start_day_of_week
+-start_month
+-is_weekend
+-is_rush_hour
+-start_hour_sin
+-start_hour_cos
+-start_day_of_week_sin
+-start_day_of_week_cos
+-start_month_sin
+-start_month_cos
+-same_start_end_location
+-trip_distance_projected
+-trip_distance
+-carrier_code_clean_1
+-carrier_code_clean_2
+-save_forward_marker_clean_2
+-save_forward_marker_clean_YES
+
+Remaning missing valuse in final feature dataset: 
+-No missing  valuse found
+
+final data types
+- record_key:object
+- elapsed_seconds:int64
+- rider_total:int64
+- start_xcoord:float64
+- start_ycoord:float64
+- end_xcoord:float64
+- end_ycoord:float64
+- start_hour:int32
+- start_day_of_week:int32
+- start_month:int32
+- is_weekend:float64
+- is_rush_hour:float64
+- start_hour_sin:float64
+- start_hour_cos:float64
+- start_day_of_week_sin:float64
+- start_day_of_week_cos:float64
+- start_month_sin:float64
+- start_month_cos:float64
+- same_start_end_location:float64
+- trip_distance_projected:float64
+- trip_distance:float64
+- carrier_code_clean_1:int32
+- carrier_code_clean_2:int32
+- save_forward_marker_clean_2:int32
+- save_forward_marker_clean_YES:int32

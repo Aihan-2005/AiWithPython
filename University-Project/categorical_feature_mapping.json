@@ -1,0 +1,12 @@
+{
+  "carrier_code_original_counts": {
+    "2": 559171,
+    "1": 485908
+  },
+  "one_hot_encoded_columns": [
+    "carrier_code_clean_1",
+    "carrier_code_clean_2",
+    "save_forward_marker_clean_2",
+    "save_forward_marker_clean_YES"
+  ]
+}
