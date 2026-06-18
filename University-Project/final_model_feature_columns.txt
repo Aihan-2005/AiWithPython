@@ -14,10 +14,15 @@ start_day_of_week_sin
 start_day_of_week_cos
 start_month_sin
 start_month_cos
+x_delta
+y_delta
+abs_x_delta
+abs_y_delta
 same_start_end_location
-trip_distance_projected
+trip_distance_km
 trip_distance
+trip_distance_log1p
 carrier_code_clean_1
 carrier_code_clean_2
-save_forward_marker_clean_2
+save_forward_marker_clean_NO
 save_forward_marker_clean_YES

@@ -3,10 +3,14 @@
     "2": 559171,
     "1": 485908
   },
+  "save_forward_marker_counts": {
+    "NO": 1039339,
+    "YES": 5740
+  },
   "one_hot_encoded_columns": [
     "carrier_code_clean_1",
     "carrier_code_clean_2",
-    "save_forward_marker_clean_2",
+    "save_forward_marker_clean_NO",
     "save_forward_marker_clean_YES"
   ]
 }
