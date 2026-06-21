@@ -1,0 +1,33 @@
+Phase 3 Modeling and Evaluation Report
+=============================================
+
+Input file: feature_engineered_regular_trips.csv
+Rows: 1,031,817
+Features used: 28
+Train rows: 825,453
+Test rows: 206,364
+
+Model selection:
+Selection rule: best combined RMSE + MAE rank
+Best model key: random_forest_tuned
+Best model name: Random Forest Tuned
+Test MAE seconds: 175.8636
+Test RMSE seconds: 258.1312
+Test R2: 0.795366
+
+Interpretation:
+MAE shows the average absolute prediction error in seconds. RMSE penalizes large errors more strongly and is useful for detecting models that perform badly on extreme trips.
+
+All model comparison results:
+                        model_key                        model_name  train_MAE_seconds  train_RMSE_seconds  train_R2  test_MAE_seconds  test_RMSE_seconds   test_R2  test_MAE_minutes  test_RMSE_minutes  rank_by_RMSE  rank_by_MAE  combined_rank_RMSE_MAE
+              random_forest_tuned               Random Forest Tuned         151.484642          224.152900  0.847148        175.863561         258.131225  0.795366          2.931059           4.302187           1.0          2.0                     3.0
+hist_gradient_boosting_log_target Hist Gradient Boosting Log Target         174.255374          265.321961  0.785844        173.805237         264.925644  0.784452          2.896754           4.415427           3.0          1.0                     4.0
+           hist_gradient_boosting            Hist Gradient Boosting         177.354208          258.751721  0.796319        177.257678         259.094930  0.793836          2.954295           4.318249           2.0          3.0                     5.0
+                      extra_trees                       Extra Trees         177.104276          255.121720  0.801994        189.796282         273.935603  0.769541          3.163271           4.565593           4.0          4.0                     8.0
+           decision_tree_depth_10            Decision Tree Depth 10         200.903364          288.718947  0.746409        202.715108         291.238439  0.739509          3.378585           4.853974           5.0          6.0                    11.0
+         decision_tree_depth_none          Decision Tree Depth None         141.684638          210.389322  0.865343        202.001781         293.622403  0.735227          3.366696           4.893707           6.0          5.0                    11.0
+   polynomial_regression_degree_2    Polynomial Regression Degree 2         217.158346          305.911838  0.715308        216.291881         304.621924  0.715018          3.604865           5.077032           7.0          7.0                    14.0
+                linear_regression                 Linear Regression         229.884474          321.316341  0.685914        229.007377         320.069937  0.685381          3.816790           5.334499           8.0          9.0                    17.0
+                       linear_svr                        Linear Svr         224.305770          327.603503  0.673502        223.498542         326.591558  0.672429          3.724976           5.443193          10.0          8.0                    18.0
+            decision_tree_depth_5             Decision Tree Depth 5         232.732314          326.946220  0.674811        232.335178         326.489752  0.672633          3.872253           5.441496           9.0         10.0                    19.0
+            baseline_dummy_median             Baseline Dummy Median         415.781301          593.112122 -0.070180        413.587317         589.877783 -0.068612          6.893122           9.831296          11.0         11.0                    22.0

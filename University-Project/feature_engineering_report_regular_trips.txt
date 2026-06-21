@@ -2,12 +2,12 @@
 Phase 2 Feature Engineering Summary
 ================================================================================
 
-Input file: cleaned_student_version.csv
-Output file: feature_engineered_student_version.csv
+Input file: cleaned_regular_trips_student_version.csv
+Output file: feature_engineered_regular_trips.csv
 
-Input rows: 1,045,079
-Input columns: 11
-Feature dataset rows: 1,045,079
+Input rows: 1,031,817
+Input columns: 12
+Feature dataset rows: 1,031,817
 Model feature columns: 28
 Coordinate system inferred: longitude_latitude
 

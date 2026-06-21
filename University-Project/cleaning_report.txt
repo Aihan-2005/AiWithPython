@@ -2,21 +2,21 @@
 Phase 1 Data Cleaning Summary
 ======================================================================
 Original rows: 1,048,575
-Final rows: 1,045,079
-Total removed rows: 3,496 (0.33%)
+Final rows: 1,031,817
+Total removed rows: 16,758 (1.60%)
 
 Rows removed by major reason:
 - missing_target_removed: 0
 - exact_duplicate_rows_removed: 0
 - duplicate_record_keys_removed: 0
 - invalid_duration_removed: 1,412
-- duration_outlier_removed: 0
+- duration_outlier_removed: 10,467
 - missing_start_time_removed: 0
 - invalid_time_order_removed: 2,065
 - duration_mismatch_removed: 0
-- invalid_rider_total_removed: 19
-- invalid_coordinates_removed: 0
-- unrealistic_speed_or_distance_removed: 0
+- invalid_rider_total_removed: 18
+- invalid_coordinates_removed: 1,677
+- unrealistic_speed_or_distance_removed: 1,119
 
 Remaining missing values:
 - None
@@ -33,8 +33,9 @@ Final data types:
 - end_ycoord: float64
 - save_forward_marker: string
 - elapsed_seconds: int64
+- is_high_duration_outlier: int64
 
-Final shape: (1045079, 11)
+Final shape: (1031817, 12)
 ======================================================================
 
 Detailed structured report is available in cleaning_report.csv.
