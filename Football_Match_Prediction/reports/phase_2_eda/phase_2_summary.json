@@ -1,0 +1,25 @@
+{
+    "dataset_shape": {
+        "rows": 110938,
+        "columns": 196
+    },
+    "target_column": "match_result",
+    "target_unique_count": 3,
+    "target_missing_count": 0,
+    "majority_class": "home",
+    "majority_baseline_accuracy": 0.4336926932160306,
+    "recent_history_columns_detected": 180,
+    "temporary_from_features_created": [],
+    "recent_change_feature_created": [],
+    "manager_change_features_created": [
+        "home_manager_changed_from_last_match_eda",
+        "away_manager_changed_from_last_match_eda"
+    ],
+    "report_dir": "c:\\Users\\mojta_tok6stl\\OneDrive\\Desktop\\learning_ai\\Football_Match_Prediction\\reports\\phase_2_eda",
+    "figures_dir": "c:\\Users\\mojta_tok6stl\\OneDrive\\Desktop\\learning_ai\\Football_Match_Prediction\\reports\\phase_2_eda\\figure",
+    "fixture_date_parse_success_percentage": 100.0,
+    "fixture_min_date": "2019-12-01 00:45:00",
+    "fixture_max_date": "2021-05-01 00:00:00",
+    "unique_competitions": 727,
+    "unique_clubs_combined": 10214
+}

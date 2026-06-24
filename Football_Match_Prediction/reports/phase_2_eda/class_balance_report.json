@@ -1,0 +1,8 @@
+{
+    "majority_class": "home",
+    "majority_baseline_accuracy": 0.4336926932160306,
+    "number_of_classes": 3,
+    "target_missing_count": 0,
+    "total_rows": 110938,
+    "valid_target_rows": 110938
+}

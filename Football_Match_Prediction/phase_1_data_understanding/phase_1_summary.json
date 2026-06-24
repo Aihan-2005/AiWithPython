@@ -4,8 +4,29 @@
     "n_columns": 190,
     "target_column": "match_result",
     "target_exists": true,
+    "n_target_classes": 3,
+    "target_missing_count": 0,
+    "target_distribution": [
+        {
+            "match_result": "home",
+            "count": 48113,
+            "percentage": 43.37
+        },
+        {
+            "match_result": "away",
+            "count": 35174,
+            "percentage": 31.71
+        },
+        {
+            "match_result": "draw",
+            "count": 27651,
+            "percentage": 24.92
+        }
+    ],
     "id_column": "match_id",
     "id_exists": true,
+    "missing_match_id_count": 0,
+    "duplicated_match_id_count": 0,
     "main_columns_existing": [
         "match_id",
         "match_result",
@@ -14,17 +35,19 @@
         "fixture_date",
         "competition",
         "competition_code",
+        "cup_game",
         "home_manager_id",
         "away_manager_id"
     ],
-    "main_columns_missing": [
-        "cub_game"
-    ],
-    "n_target_classes": 3,
-    "target_missing_count": 0,
-    "full_duplicate_rows": 186,
+    "main_columns_missing": [],
+    "full_duplicate_rows": 0,
+    "full_duplicate_percentage": 0.0,
     "columns_with_missing_count": 186,
+    "high_missing_columns_count": 0,
+    "numeric_columns_count": 164,
+    "possible_categorical_columns_count": 189,
     "recent_history_columns_detected": 180,
+    "recent_history_incomplete_feature_count": 0,
     "date_like_columns_detected": [
         "fixture_date",
         "home_club_recent_fixture_date_1",
@@ -48,26 +71,5 @@
         "away_club_recent_fixture_date_9",
         "away_club_recent_fixture_date_10"
     ],
-    "suspicious_leakage_columns": [
-        "home_club_recent_goals_scored_1",
-        "home_club_recent_goals_scored_2",
-        "home_club_recent_goals_scored_3",
-        "home_club_recent_goals_scored_4",
-        "home_club_recent_goals_scored_5",
-        "home_club_recent_goals_scored_6",
-        "home_club_recent_goals_scored_7",
-        "home_club_recent_goals_scored_8",
-        "home_club_recent_goals_scored_9",
-        "home_club_recent_goals_scored_10",
-        "away_club_recent_goals_scored_1",
-        "away_club_recent_goals_scored_2",
-        "away_club_recent_goals_scored_3",
-        "away_club_recent_goals_scored_4",
-        "away_club_recent_goals_scored_5",
-        "away_club_recent_goals_scored_6",
-        "away_club_recent_goals_scored_7",
-        "away_club_recent_goals_scored_8",
-        "away_club_recent_goals_scored_9",
-        "away_club_recent_goals_scored_10"
-    ]
+    "high_risk_suspicious_leakage_columns": []
 }
