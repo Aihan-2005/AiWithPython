@@ -1,0 +1,7 @@
+{
+    "unique_clubs": 10215,
+    "clubs_with_fewer_than_5_appearances": 1533,
+    "clubs_with_fewer_than_10_appearances": 3263,
+    "max_club_appearances": 173,
+    "median_club_appearances": 16.0
+}
