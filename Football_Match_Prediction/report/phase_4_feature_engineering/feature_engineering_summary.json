@@ -1,35 +1,35 @@
 {
      "input_shape": {
           "rows": 110015,
-          "columns": 469
+          "columns": 466
      },
      "model_ready_shape": {
           "rows": 110015,
-          "columns": 242
+          "columns": 397
      },
      "target_column": "match_result",
-     "numeric_feature_count": 193,
+     "numeric_feature_count": 392,
      "categorical_feature_count": 5,
-     "total_model_features": 198,
+     "total_model_features": 397,
      "low_information_features_removed": [],
      "feature_groups_created": {
-          "venue_aware_form": 165,
-          "home_away_advantage": 129,
-          "recent_result_morale": 84,
-          "opponent_adjusted_form": 81,
           "recent_goal_form": 72,
-          "opponent_strength": 48,
+          "recent_result_morale": 42,
           "rating_strength": 42,
-          "category_frequency": 12,
-          "manager_stability": 10,
+          "home_away_advantage": 33,
+          "venue_aware_form": 33,
+          "opponent_adjusted_form": 18,
+          "category_frequency": 18,
+          "opponent_strength": 12,
           "rest_schedule": 9,
+          "manager_stability": 8,
           "date_time": 6
      },
      "output_files": {
-          "full_feature_engineered_data": "data\\processed\\feature_engineered_full_football_data.csv",
-          "model_ready_data": "data\\processed\\feature_engineered_model_ready.csv",
-          "feature_creation_report": "report\\phase_4_feature_engineering\\feature_creation_report.csv",
-          "final_feature_list": "report\\phase_4_feature_engineering\\final_feature_list.csv",
-          "summary_json": "report\\phase_4_feature_engineering\\feature_engineering_summary.json"
+          "full_feature_engineered_data": "data/processed/feature_engineered_full_football_data.csv",
+          "model_ready_data": "data/processed/feature_engineered_model_ready.csv",
+          "feature_creation_report": "report/phase_4_feature_engineering/feature_creation_report.csv",
+          "final_feature_list": "report/phase_4_feature_engineering/final_feature_list.csv",
+          "summary_json": "report/phase_4_feature_engineering/feature_engineering_summary.json"
      }
 }

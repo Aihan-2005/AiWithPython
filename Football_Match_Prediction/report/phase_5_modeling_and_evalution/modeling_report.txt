@@ -1,0 +1,39 @@
+------------------------------------------------------------
+Phase 5 Modeling and Evaluation Report
+------------------------------------------------------------
+
+Input file:feature_engineered_model_ready.csv
+Target column:feature_engineered_model_ready.csv
+Test size: 0.2
+Random state: 6
+
+Main task : Classifition
+Fianl model selection metric : highest test Accuracy
+
+Best model:
+- Model key: Linear Svc Classifier
+-Model name: Linear Svc Classifier
+- Test Accuracy: 0.4968
+- Test F1 Score : 0.3702
+
+Model comparison: 
+- Linear Svc Classifier: Accuracy=0.4968, F1=0.3702, Precision=0.4380, Recall=0.4257, Log Loss=1.0165, ROC AUC=0.6347
+- Xgb Classifier: Accuracy=0.4965, F1=0.3704, Precision=0.4700, Recall=0.4245, Log Loss=1.0152, ROC AUC=0.6363
+- Logistic Regression: Accuracy=0.4952, F1=0.3743, Precision=0.4425, Recall=0.4260, Log Loss=1.0160, ROC AUC=0.6355
+- Random Forest Classifier: Accuracy=0.4880, F1=0.3842, Precision=0.4295, Recall=0.4232, Log Loss=1.0286, ROC AUC=0.6221
+- Decision Tree Classifier 5: Accuracy=0.4876, F1=0.3529, Precision=0.4043, Recall=0.4124, Log Loss=1.0295, ROC AUC=0.6135
+- Decision Tree Classifier 10: Accuracy=0.4733, F1=0.3744, Precision=0.4095, Recall=0.4081, Log Loss=1.5319, ROC AUC=0.6018
+- Knn Classifier 11: Accuracy=0.4404, F1=0.4009, Precision=0.4035, Recall=0.4060, Log Loss=1.6943, ROC AUC=0.5833
+- Dummy Classifier: Accuracy=0.4336, F1=0.2016, Precision=0.1445, Recall=0.3333, Log Loss=20.4159, ROC AUC=0.5000
+- Knn Classifier 5: Accuracy=0.4137, F1=0.3923, Precision=0.3941, Recall=0.3960, Log Loss=5.3610, ROC AUC=0.5657
+- Knn Classifier 3: Accuracy=0.4087, F1=0.3767, Precision=0.3812, Recall=0.3853, Log Loss=9.8682, ROC AUC=0.5552
+- Decision Tree Classifier None: Accuracy=0.3876, F1=0.3682, Precision=0.3682, Recall=0.3682, Log Loss=22.0737, ROC AUC=0.5277
+
+Imortant course alignment note: 
+- KNN, Decision Tree, Logistic Regression, Random Forest, and SVM were used as classifition models.
+
+Output files:
+- model_comparison.csv
+- test_predictions.csv
+- best_model.pkl
+- final_model_feature_columns.txt
