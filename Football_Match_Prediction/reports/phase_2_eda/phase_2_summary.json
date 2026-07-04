@@ -1,7 +1,7 @@
 {
     "dataset_shape": {
         "rows": 110938,
-        "columns": 213
+        "columns": 196
     },
     "target_column": "match_result",
     "target_unique_count": 3,
@@ -9,49 +9,13 @@
     "majority_class": "home",
     "majority_baseline_accuracy": 0.4336926932160306,
     "recent_history_columns_detected": 180,
-    "temporary_form_features_created": [
-        "home_avg_goals_scored_last5_eda",
-        "home_avg_goals_conceded_last5_eda",
-        "home_avg_team_rating_last5_eda",
-        "home_avg_opponent_rating_last5_eda",
-        "away_avg_goals_scored_last5_eda",
-        "away_avg_goals_conceded_last5_eda",
-        "away_avg_team_rating_last5_eda",
-        "away_avg_opponent_rating_last5_eda",
-        "home_goal_diff_last5_eda",
-        "away_goal_diff_last5_eda",
-        "goal_diff_advantage_home_minus_away_eda",
-        "rating_advantage_home_minus_away_eda",
-        "recent_opponent_strength_diff_home_minus_away_eda"
-    ],
-    "recent_context_features_created": [
-        "home_recent_played_at_home_rate_last10_eda",
-        "home_recent_cup_game_rate_last10_eda",
-        "away_recent_played_at_home_rate_last10_eda",
-        "away_recent_cup_game_rate_last10_eda"
-    ],
+    "temporary_form_features_created": [],
+    "recent_context_features_created": [],
     "manager_change_features_created": [
         "home_manager_changed_from_last_match_eda",
         "away_manager_changed_from_last_match_eda"
     ],
     "numeric_eda_features_used_for_correlation": [
-        "home_avg_goals_scored_last5_eda",
-        "home_avg_goals_conceded_last5_eda",
-        "home_avg_team_rating_last5_eda",
-        "home_avg_opponent_rating_last5_eda",
-        "away_avg_goals_scored_last5_eda",
-        "away_avg_goals_conceded_last5_eda",
-        "away_avg_team_rating_last5_eda",
-        "away_avg_opponent_rating_last5_eda",
-        "home_goal_diff_last5_eda",
-        "away_goal_diff_last5_eda",
-        "goal_diff_advantage_home_minus_away_eda",
-        "rating_advantage_home_minus_away_eda",
-        "recent_opponent_strength_diff_home_minus_away_eda",
-        "home_recent_played_at_home_rate_last10_eda",
-        "home_recent_cup_game_rate_last10_eda",
-        "away_recent_played_at_home_rate_last10_eda",
-        "away_recent_cup_game_rate_last10_eda",
         "home_manager_changed_from_last_match_eda",
         "away_manager_changed_from_last_match_eda"
     ],

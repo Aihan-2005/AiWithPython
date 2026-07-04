@@ -1,0 +1,45 @@
+--------------------------------------------------------------------------------
+Phase 5 Modeling and Evaluation Report
+--------------------------------------------------------------------------------
+
+Input file: feature_engineered_model_ready.csv
+Target column: match_result
+Test size: 0.2
+Random state: 6
+Time-based split: True
+
+Main task: Multi-class classification
+Final model selection metric: test_f1_macro
+
+Best model:
+- Model key: logistic_regression_balanced
+- Model name: Logistic Regression Balanced
+- Test Accuracy: 0.4532
+- Test Balanced Accuracy: 0.4529
+- Test F1 Macro: 0.4497
+- Test F1 Weighted: 0.4617
+- Test Log Loss: 1.0441
+
+Model comparison:
+- Logistic Regression Balanced: Accuracy=0.4532, Balanced Accuracy=0.4529, F1 Macro=0.4497, F1 Weighted=0.4617, Log Loss=1.0441, ROC AUC=0.6405
+- Decision Tree Depth 5: Accuracy=0.4389, Balanced Accuracy=0.4393, F1 Macro=0.4356, F1 Weighted=0.4470, Log Loss=1.0491, ROC AUC=0.6226
+- Decision Tree Depth 10: Accuracy=0.4162, Balanced Accuracy=0.4177, F1 Macro=0.4135, F1 Weighted=0.4253, Log Loss=1.6411, ROC AUC=0.6022
+- Logistic Regression: Accuracy=0.4930, Balanced Accuracy=0.4386, F1 Macro=0.4075, F1 Weighted=0.4455, Log Loss=1.0161, ROC AUC=0.6417
+- Hist Gradient Boosting: Accuracy=0.4953, Balanced Accuracy=0.4335, F1 Macro=0.3856, F1 Weighted=0.4295, Log Loss=1.0117, ROC AUC=0.6439
+- Random Forest: Accuracy=0.4906, Balanced Accuracy=0.4278, F1 Macro=0.3824, F1 Weighted=0.4256, Log Loss=1.0230, ROC AUC=0.6312
+- Xgboost: Accuracy=0.4969, Balanced Accuracy=0.4319, F1 Macro=0.3795, F1 Weighted=0.4250, Log Loss=1.0109, ROC AUC=0.6450
+- Extra Trees: Accuracy=0.4880, Balanced Accuracy=0.4226, F1 Macro=0.3711, F1 Weighted=0.4164, Log Loss=1.0234, ROC AUC=0.6314
+- Decision Tree Depth None: Accuracy=0.3859, Balanced Accuracy=0.3685, F1 Macro=0.3686, F1 Weighted=0.3861, Log Loss=22.1328, ROC AUC=0.5279
+- Dummy Most Frequent: Accuracy=0.4266, Balanced Accuracy=0.3333, F1 Macro=0.1993, F1 Weighted=0.2551, Log Loss=20.6682, ROC AUC=0.5000
+
+Course alignment note:
+- DummyClassifier, Logistic Regression, Linear SVC, Decision Tree, Random Forest, Extra Trees, HistGradientBoosting, and optionally XGBoost were evaluated as supervised classification models.
+
+Output files:
+- model_comparison.csv
+- test_predictions.csv
+- best_model.joblib
+- final_model_feature_columns.txt
+- confusion_matrix.csv
+- classification_report.csv
+- best_model_feature_importance_or_coefficients.csv

@@ -1,35 +1,50 @@
 {
      "input_shape": {
           "rows": 110015,
-          "columns": 466
+          "columns": 468
      },
      "model_ready_shape": {
           "rows": 110015,
-          "columns": 397
+          "columns": 280
      },
      "target_column": "match_result",
-     "numeric_feature_count": 392,
+     "target_distribution": {
+          "home": 47701,
+          "away": 34818,
+          "draw": 27496
+     },
+     "metadata_columns": [
+          "match_id",
+          "fixture_date_parsed"
+     ],
+     "numeric_feature_count": 272,
      "categorical_feature_count": 5,
-     "total_model_features": 397,
+     "total_model_features": 277,
+     "low_information_features_removed_count": 0,
      "low_information_features_removed": [],
+     "high_missing_features_count": 0,
+     "high_missing_features": [],
      "feature_groups_created": {
-          "recent_goal_form": 72,
-          "recent_result_morale": 42,
-          "rating_strength": 42,
-          "home_away_advantage": 33,
-          "venue_aware_form": 33,
-          "opponent_adjusted_form": 18,
-          "category_frequency": 18,
-          "opponent_strength": 12,
+          "recent_result_morale": 68,
+          "rating_strength": 56,
+          "venue_aware_form": 42,
+          "home_away_advantage": 24,
+          "recent_goal_form": 18,
+          "draw_similarity": 15,
+          "opponent_adjusted_form": 12,
+          "date_time": 10,
+          "manager_stability": 10,
           "rest_schedule": 9,
-          "manager_stability": 8,
-          "date_time": 6
+          "category_frequency": 6,
+          "opponent_adjuested_form": 6,
+          "match_context": 1
      },
      "output_files": {
-          "full_feature_engineered_data": "data/processed/feature_engineered_full_football_data.csv",
-          "model_ready_data": "data/processed/feature_engineered_model_ready.csv",
-          "feature_creation_report": "report/phase_4_feature_engineering/feature_creation_report.csv",
-          "final_feature_list": "report/phase_4_feature_engineering/final_feature_list.csv",
-          "summary_json": "report/phase_4_feature_engineering/feature_engineering_summary.json"
+          "full_feature_engineered_data": "data\\processed\\feature_engineered_full_football_data.csv",
+          "model_ready_data": "data\\processed\\feature_engineered_model_ready.csv",
+          "feature_creation_report": "report\\phase_4_feature_engineering\\feature_creation_report.csv",
+          "final_feature_list": "report\\phase_4_feature_engineering\\final_feature_list.csv",
+          "feature_quality_report": "report\\phase_4_feature_engineering\\feature_quality_report.csv",
+          "summary_json": "report\\phase_4_feature_engineering\\feature_engineering_summary.json"
      }
 }
