@@ -5,7 +5,7 @@
      },
      "model_ready_shape": {
           "rows": 110015,
-          "columns": 280
+          "columns": 285
      },
      "target_column": "match_result",
      "target_distribution": {
@@ -17,9 +17,9 @@
           "match_id",
           "fixture_date_parsed"
      ],
-     "numeric_feature_count": 272,
+     "numeric_feature_count": 277,
      "categorical_feature_count": 5,
-     "total_model_features": 277,
+     "total_model_features": 282,
      "low_information_features_removed_count": 0,
      "low_information_features_removed": [],
      "high_missing_features_count": 0,
