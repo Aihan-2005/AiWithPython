@@ -31,3 +31,7 @@ checkpoints/
 *.mp4
 *.mov
 
+env/
+.venv/
+venv/
+env/

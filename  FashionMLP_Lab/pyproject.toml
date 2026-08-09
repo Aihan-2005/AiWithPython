@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fashion-mlp-lab"
+version = "0.1.0"
+description = "Portfolio-ready Fashion-MNIST MLP training and hyperparameter optimization lab with Keras 3."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Your Name"}]
+dependencies = [
+  "tensorflow>=2.16",
+  "keras>=3.0",
+  "keras-tuner>=1.4.7",
+  "numpy>=1.26",
+  "pandas>=2.1",
+  "matplotlib>=3.8",
+  "scikit-learn>=1.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+fashion-mlp-train = "fashion_mlp.train:main"
+fashion-mlp-lr-find = "fashion_mlp.lr_find:main"
+fashion-mlp-tune = "fashion_mlp.tune:main"
+fashion-mlp-evaluate = "fashion_mlp.evaluate:main"
+fashion-mlp-predict = "fashion_mlp.predict:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
