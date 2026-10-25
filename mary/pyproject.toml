@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "london-traffic-routing"
+version = "0.1.0"
+description = "OSMnx and TomTom traffic setup for routing experiments"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["src"]
