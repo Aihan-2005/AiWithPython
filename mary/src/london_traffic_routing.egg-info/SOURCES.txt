@@ -10,6 +10,9 @@ src/routing/map_matching.py
 src/routing/map_view.py
 src/routing/traffic_api.py
 src/routing/traffic_pipeline.py
+src/routing/traffic_quality.py
+tests/test_improvements.py
 tests/test_map_matching.py
 tests/test_step3.py
 tests/test_traffic_pipeline.py
+tests/test_traffic_quality.py

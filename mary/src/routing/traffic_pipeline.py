@@ -1,8 +1,8 @@
 
-
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Iterable
 from datetime import datetime, timezone
 import json
 import math
@@ -84,7 +84,7 @@ def _apply_validated_flow(edge: dict, payload: dict, min_conf: float) -> None:
 
 
 def _select_edges(graph: nx.MultiDiGraph, limit: int) -> list[tuple]:
- 
+
     if limit < 0:
         raise ValueError("limit must be non-negative")
     if limit == 0:
@@ -108,7 +108,6 @@ def _select_edges(graph: nx.MultiDiGraph, limit: int) -> list[tuple]:
         for c in candidates
     ]
     for _ in range(min(limit, n) - 1):
-
         choices = (i for i in range(n) if i not in chosen and min_sq[i] >= 15 ** 2)
         best = max(choices, key=lambda i: (min_sq[i], -i), default=None)
         if best is None:
@@ -142,6 +141,7 @@ def collect_traffic_snapshot(
     max_requests: int = MAX_TRAFFIC_REQUESTS,
     pause_s: float = TRAFFIC_REQUEST_PAUSE_S,
     confidence_threshold: float = MIN_TOMTOM_CONFIDENCE,
+    selected_edge_ids: Iterable[tuple[int, int, int]] | None = None,
 ) -> tuple[nx.MultiDiGraph, dict]:
     if not isinstance(max_requests, int) or max_requests < 0:
         raise ValueError("max_requests must be a non-negative integer")
@@ -152,7 +152,28 @@ def collect_traffic_snapshot(
     graph = osm_graph.copy()
     _initialize_costs(graph)
     transformer = Transformer.from_crs("EPSG:4326", "EPSG:27700", always_xy=True)
-    targets = _select_edges(graph, max_requests)
+    if selected_edge_ids is None:
+        targets = _select_edges(graph, max_requests)
+        sampling_strategy = "deterministic_farthest_midpoints_15m_dedup"
+    else:
+        
+        targets = []
+        seen = set()
+        for edge_id in selected_edge_ids:
+            if len(targets) >= max_requests:
+                break
+            if not isinstance(edge_id, (tuple, list)) or len(edge_id) != 3:
+                raise ValueError("Each planned probe must be a directed (u, v, key) edge")
+            edge_id = tuple(edge_id)
+            if not graph.has_edge(*edge_id):
+                raise ValueError(f"Probe edge not found in graph: {edge_id}")
+            if edge_id not in seen:
+                seen.add(edge_id)
+                targets.append(edge_id)
+            if len(targets) >= max_requests:
+                break
+        targets = targets[:max_requests]
+        sampling_strategy = "provided_reviewed_edge_plan"
     start = datetime.now(timezone.utc).isoformat()
     requests_made = request_errors = 0
     stop_code = None
@@ -216,7 +237,8 @@ def collect_traffic_snapshot(
              "example_message_redacted": examples.get((http, c))}
             for (http, c), count in sorted(failures.items(), key=lambda t: (str(t[0]),))
         ],
-        "sampling_strategy": "deterministic_farthest_midpoints_15m_dedup",
+        "sampling_strategy": sampling_strategy,
+        "probe_plan_count": len(targets),
         "fallback_speed_kph": DEFAULT_UNOBSERVED_SPEED_KPH,
         "minimum_confidence": confidence_threshold,
         "heading_policy": "TomTom geometry ordering used only as a direction proxy; not legally verified",
