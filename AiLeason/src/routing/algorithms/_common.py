@@ -15,14 +15,27 @@ def node_sort_key(value: Node) -> tuple[str, str]:
 
     return type(value).__name__, str(value)
 
-
 def weight_attribute(graph: nx.MultiDiGraph) -> str:
     if not isinstance(graph, nx.MultiDiGraph) or not graph.is_directed():
-        raise TypeError("Expected a directed networkx.MultiDiGraph")
-    weight = graph.graph.get("routing_weight")
-    if weight not in ("length", "free_flow_time_s", "travel_time_s"):
+        raise TypeError(
+            "Expected a directed networkx.MultiDiGraph"
+        )
 
-     return weight
+    weight = graph.graph.get("routing_weight")
+
+    allowed = (
+        "length",
+        "free_flow_time_s",
+        "travel_time_s",
+    )
+
+    if weight not in allowed:
+        raise ValueError(
+            "Missing or invalid routing_weight. "
+            "Call make_routing_graph() first."
+        )
+
+    return weight
  
 
 def valid_cost(value: object) -> float | None:
