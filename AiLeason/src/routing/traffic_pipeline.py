@@ -347,7 +347,10 @@ def collect_traffic_snapshot(
     if not math.isfinite(pause_s) or pause_s < 0:
         raise ValueError("pause_s must be finite and non-negative")
     graph = osm_graph.copy()
-    _initialize_costs(graph, preserve_existing=True)
+
+
+
+    _initialize_costs(graph)
 
     transformer = Transformer.from_crs(
         "EPSG:4326", "EPSG:27700", always_xy=True
@@ -839,3 +842,5 @@ def make_routing_graph(
     graph.graph["traffic_data_policy"] = policy_by_scenario[scenario]
 
     return graph
+
+
