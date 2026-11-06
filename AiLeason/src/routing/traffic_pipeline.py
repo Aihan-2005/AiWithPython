@@ -22,6 +22,10 @@ from .map_matching import assess_osm_edge, directed_osm_line
 from .traffic_api import TomTomClient, TomTomAPIError
 
 
+_USABLE_OBSERVED_STATUSES = {"red", "yellow", "clear"}
+_ALL_TRAFFIC_STATUSES = {"missing", "red", "yellow", "clear", "closed"}
+
+
 def _positive(value: object) -> float | None:
     """Return a finite positive float, or None for invalid/non-positive input."""
     try:
@@ -35,16 +39,22 @@ def _initialize_costs(graph: nx.MultiDiGraph) -> None:
     """Initialize every directed edge with explicit missing/imputed traffic costs."""
     fallback_speed = float(DEFAULT_UNOBSERVED_SPEED_KPH)
     if not math.isfinite(fallback_speed) or fallback_speed <= 0:
-        raise ValueError("DEFAULT_UNOBSERVED_SPEED_KPH must be finite and positive")
+        raise ValueError(
+            "DEFAULT_UNOBSERVED_SPEED_KPH must be finite and positive"
+        )
 
     for _, _, _, edge in graph.edges(keys=True, data=True):
         try:
             length = float(edge["length"])
         except (KeyError, TypeError, ValueError, OverflowError) as exc:
-            raise ValueError("Every OSM edge must have a numeric 'length'") from exc
+            raise ValueError(
+                "Every OSM edge must have a numeric 'length'"
+            ) from exc
 
         if not math.isfinite(length) or length < 0:
-            raise ValueError("OSM edge length must be finite and non-negative")
+            raise ValueError(
+                "OSM edge length must be finite and non-negative"
+            )
 
         assumed_time = 3.6 * length / fallback_speed
         edge.update(
@@ -69,7 +79,7 @@ def _initialize_costs(graph: nx.MultiDiGraph) -> None:
         )
 
 
-def _edge_id_text(edge_id: tuple[int, int, int]) -> str:
+def _edge_id_text(edge_id: tuple) -> str:
     """Serialize a directed OSM edge ID for JSON-friendly edge metadata."""
     return "|".join(map(str, edge_id))
 
@@ -80,7 +90,7 @@ def _apply_validated_flow(
     min_conf: float,
     *,
     direction_method: str = "coordinate_order_proxy_unverified",
-    probe_edge_id: tuple[int, int, int] | None = None,
+    probe_edge_id: tuple | None = None,
     match_source: str = "direct_probe",
 ) -> None:
     """
@@ -119,7 +129,6 @@ def _apply_validated_flow(
 
     free_flow_speed = _positive(payload.get("freeFlowSpeed"))
     current_speed = _positive(payload.get("currentSpeed"))
-
     edge_length = float(edge["length"])
 
     if free_flow_speed is not None:
@@ -144,7 +153,6 @@ def _apply_validated_flow(
         return
 
     speed_ratio = current_speed / free_flow_speed
-
     edge.update(
         traffic_status=(
             "red" if speed_ratio < 0.5
@@ -198,7 +206,6 @@ def _select_edges(graph: nx.MultiDiGraph, limit: int) -> list[tuple]:
     center_x, center_y = center_to_meters.transform(
         MAP_CENTER[1], MAP_CENTER[0]
     )
-
     closest = min(
         range(len(candidates)),
         key=lambda i: (
@@ -220,7 +227,7 @@ def _select_edges(graph: nx.MultiDiGraph, limit: int) -> list[tuple]:
     for _ in range(target_count - 1):
         choices = (
             i for i in range(len(candidates))
-            if i not in chosen_indices and min_distance_sq[i] >= 15.0 ** 2
+            if i not in chosen_indices and min_distance_sq[i] >= 15.0**2
         )
         best = max(
             choices,
@@ -244,19 +251,15 @@ def _select_edges(graph: nx.MultiDiGraph, limit: int) -> list[tuple]:
 
 def _reverse_edge_ids(
     graph: nx.MultiDiGraph,
-    edge_id: tuple[int, int, int],
-) -> list[tuple[int, int, int]]:
+    edge_id: tuple,
+) -> list[tuple]:
     """Return existing directed edges from v to u; never create reverse edges."""
     if not isinstance(edge_id, (tuple, list)) or len(edge_id) != 3:
         raise ValueError("edge_id must be a directed (u, v, key) tuple")
 
     u, v, _ = edge_id
     reverse_data = graph.get_edge_data(v, u, default={})
-
-    return [
-        (v, u, key)
-        for key in sorted(reverse_data, key=str)
-    ]
+    return [(v, u, key) for key in sorted(reverse_data, key=str)]
 
 
 def preview_probes(
@@ -269,7 +272,6 @@ def preview_probes(
         midpoint = directed_osm_line(
             graph, *edge_id
         ).interpolate(0.5, normalized=True)
-
         edge_attrs = graph[edge_id[0]][edge_id[1]][edge_id[2]]
         rows.append(
             {
@@ -284,12 +286,12 @@ def preview_probes(
 
 def collect_traffic_snapshot(
     osm_graph: nx.MultiDiGraph,
-    client: TomTomClient,
+    client: TomTomClient | None,
     *,
     max_requests: int = MAX_TRAFFIC_REQUESTS,
     pause_s: float = TRAFFIC_REQUEST_PAUSE_S,
     confidence_threshold: float = MIN_TOMTOM_CONFIDENCE,
-    selected_edge_ids: Iterable[tuple[int, int, int]] | None = None,
+    selected_edge_ids: Iterable[tuple] | None = None,
 ) -> tuple[nx.MultiDiGraph, dict]:
     """
     Collect a bounded TomTom traffic snapshot for directed OSM edges.
@@ -320,7 +322,9 @@ def collect_traffic_snapshot(
         not math.isfinite(confidence_threshold)
         or not 0.0 <= confidence_threshold <= 1.0
     ):
-        raise ValueError("confidence_threshold must be finite and between 0 and 1")
+        raise ValueError(
+            "confidence_threshold must be finite and between 0 and 1"
+        )
 
     try:
         pause_s = float(pause_s)
@@ -363,6 +367,11 @@ def collect_traffic_snapshot(
 
         sampling_strategy = "provided_reviewed_edge_plan"
 
+    if targets and client is None:
+        raise ValueError(
+            "A TomTom client is required when max_requests selects one or more probes"
+        )
+
     target_set = set(targets)
     started_at = datetime.now(timezone.utc).isoformat()
 
@@ -378,7 +387,6 @@ def collect_traffic_snapshot(
     for u, v, key in targets:
         edge_id = (u, v, key)
         attrs = graph[u][v][key]
-
         midpoint = directed_osm_line(
             graph, u, v, key
         ).interpolate(0.5, normalized=True)
@@ -403,8 +411,8 @@ def collect_traffic_snapshot(
                 if status_code is not None
                 else "api_network_error"
             )
-
             api_failures[(status_code, error_code)] += 1
+
             if (
                 len(api_error_examples) < 5
                 and (status_code, error_code) not in api_error_examples
@@ -450,7 +458,6 @@ def collect_traffic_snapshot(
                     ][
                         reverse_id[2]
                     ]
-
                     reverse_attrs["traffic_sampled"] = True
 
                     reverse_match = assess_osm_edge(
@@ -464,9 +471,7 @@ def collect_traffic_snapshot(
                     )
 
                     if reverse_match.accepted:
-                        reverse_matches.append(
-                            (reverse_id, reverse_match)
-                        )
+                        reverse_matches.append((reverse_id, reverse_match))
                     else:
                         reverse_attrs["traffic_reason"] = (
                             "geometry_or_heading_mismatch"
@@ -519,7 +524,6 @@ def collect_traffic_snapshot(
                         reverse_attrs["traffic_match_reason"] = (
                             "reverse_candidate_match"
                         )
-
                         _apply_validated_flow(
                             reverse_attrs,
                             payload,
@@ -530,7 +534,6 @@ def collect_traffic_snapshot(
                             probe_edge_id=edge_id,
                             match_source="reverse_inferred",
                         )
-
                         attrs["traffic_reason"] = "matched_on_reverse_edge"
                         reverse_direction_reassignments += 1
 
@@ -575,13 +578,24 @@ def collect_traffic_snapshot(
         bool(edge["traffic_matched"]) for edge in all_edges
     )
     usable_edges = sum(
-        counts[status] for status in ("red", "yellow", "clear", "closed")
-    )
+    counts[status]
+    for status in _USABLE_OBSERVED_STATUSES
+)
     sampled_edges = sum(
         bool(edge["traffic_sampled"]) for edge in all_edges
     )
     directly_queried_edges = sum(
         bool(edge["traffic_directly_queried"]) for edge in all_edges
+    )
+    direct_observed_edges = sum(
+        edge["traffic_status"] in _ALL_TRAFFIC_STATUSES - {"missing"}
+        and edge["traffic_match_source"] == "direct_probe"
+        for edge in all_edges
+    )
+    reverse_observed_edges = sum(
+        edge["traffic_status"] in _ALL_TRAFFIC_STATUSES - {"missing"}
+        and edge["traffic_match_source"] == "reverse_inferred"
+        for edge in all_edges
     )
 
     summary = {
@@ -597,12 +611,22 @@ def collect_traffic_snapshot(
         "reverse_direction_reassignments": reverse_direction_reassignments,
         "geometry_and_heading_candidate_matches": matched_edges,
         "usable_observed_edges": usable_edges,
+        "direct_observed_edges": direct_observed_edges,
+        "reverse_inferred_observed_edges": reverse_observed_edges,
         "matched_coverage_percent": (
             round(100.0 * matched_edges / total_edges, 2)
             if total_edges else 0.0
         ),
         "usable_coverage_percent": (
             round(100.0 * usable_edges / total_edges, 2)
+            if total_edges else 0.0
+        ),
+        "direct_observed_coverage_percent": (
+            round(100.0 * direct_observed_edges / total_edges, 2)
+            if total_edges else 0.0
+        ),
+        "reverse_observed_coverage_percent": (
+            round(100.0 * reverse_observed_edges / total_edges, 2)
             if total_edges else 0.0
         ),
         "usable_among_sampled_percent": (
@@ -640,6 +664,7 @@ def collect_traffic_snapshot(
             "missing; fallback travel times are imputed. sampled_directed_edges "
             "includes reverse candidates assessed without an extra API call."
         ),
+        "closed_observed_edges": counts["closed"],
     }
 
     graph.graph["traffic_collection_start_utc"] = started_at
@@ -667,16 +692,20 @@ def make_routing_graph(
     objective: str = "time",
     *,
     scenario: str = "measured",
-    imposed_closure: tuple[int, int, int] | None = None,
+    imposed_closure: tuple | None = None,
 ) -> nx.MultiDiGraph:
     """
     Build a routing graph for a time/distance objective and traffic scenario.
 
     Scenarios:
       - free_flow: use free_flow_time_s for time routing; retain closures.
-      - measured: use travel_time_s and remove TomTom-reported closures.
-      - closure: use travel_time_s, remove reported closures, then optionally
-        remove one additional directed edge as a simulated closure.
+      - measured: use travel_time_s; missing edges keep imputed fallback costs.
+      - closure: measured scenario plus one simulated directed-edge closure.
+      - observed_only: retain only usable direct and reverse observations.
+      - direct_observed_only: retain only usable direct observations.
+
+    The two observed-only scenarios require objective='time'. They exclude
+    fallback/imputed edges so they cannot silently masquerade as measured data.
     """
     if not isinstance(snapshot, nx.MultiDiGraph):
         raise TypeError("snapshot must be a networkx.MultiDiGraph")
@@ -684,9 +713,23 @@ def make_routing_graph(
     if objective not in ("time", "distance"):
         raise ValueError("objective must be 'time' or 'distance'")
 
-    if scenario not in ("free_flow", "measured", "closure"):
+    allowed_scenarios = {
+        "free_flow",
+        "measured",
+        "closure",
+        "observed_only",
+        "direct_observed_only",
+    }
+    if scenario not in allowed_scenarios:
         raise ValueError(
-            "scenario must be 'free_flow', 'measured', or 'closure'"
+            "scenario must be one of: free_flow, measured, closure, "
+            "observed_only, direct_observed_only"
+        )
+
+    observed_only_scenarios = {"observed_only", "direct_observed_only"}
+    if scenario in observed_only_scenarios and objective != "time":
+        raise ValueError(
+            "Observed-only scenarios require objective='time'"
         )
 
     if scenario == "closure":
@@ -708,13 +751,51 @@ def make_routing_graph(
 
     graph = snapshot.copy()
 
-    if scenario in ("measured", "closure"):
+    observed_before_filter = sum(
+        attrs.get("traffic_status") in _USABLE_OBSERVED_STATUSES
+        and attrs.get("time_is_imputed") is False
+        and attrs.get("traffic_match_source")
+        in {"direct_probe", "reverse_inferred"}
+        for _, _, _, attrs in graph.edges(keys=True, data=True)
+    )
+
+    # Reported closures are removed from every traffic-based scenario except
+    # free_flow, which intentionally retains the pre-existing behavior.
+    if scenario in {
+        "measured",
+        "closure",
+        "observed_only",
+        "direct_observed_only",
+    }:
         closed_edges = [
             (u, v, key)
             for u, v, key, attrs in graph.edges(keys=True, data=True)
-            if attrs.get("is_closed") is True
+            if (
+                attrs.get("is_closed") is True
+                or attrs.get("traffic_status") == "closed"
+            )
         ]
         graph.remove_edges_from(closed_edges)
+
+    if scenario in observed_only_scenarios:
+        allowed_sources = (
+            {"direct_probe"}
+            if scenario == "direct_observed_only"
+            else {"direct_probe", "reverse_inferred"}
+        )
+
+        remove_edges = []
+        for u, v, key, attrs in graph.edges(keys=True, data=True):
+            usable_observation = (
+                attrs.get("traffic_status") in _USABLE_OBSERVED_STATUSES
+                and attrs.get("time_is_imputed") is False
+                and attrs.get("traffic_matched") is True
+                and attrs.get("traffic_match_source") in allowed_sources
+            )
+            if not usable_observation:
+                remove_edges.append((u, v, key))
+
+        graph.remove_edges_from(remove_edges)
 
     if scenario == "closure" and graph.has_edge(*imposed_closure):
         graph.remove_edge(*imposed_closure)
@@ -730,5 +811,18 @@ def make_routing_graph(
             else "travel_time_s"
         )
     )
+    graph.graph["traffic_observed_edges_before_filter"] = int(
+        observed_before_filter
+    )
+    graph.graph["traffic_edges_after_filter"] = graph.number_of_edges()
+
+    policy_by_scenario = {
+        "free_flow": "free_flow_or_fallback_costs",
+        "measured": "observed_plus_imputed_fallback",
+        "closure": "observed_plus_imputed_fallback_with_simulated_closure",
+        "observed_only": "direct_and_reverse_observed_only",
+        "direct_observed_only": "direct_observations_only",
+    }
+    graph.graph["traffic_data_policy"] = policy_by_scenario[scenario]
 
     return graph

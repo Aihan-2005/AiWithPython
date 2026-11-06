@@ -88,3 +88,88 @@ def test_zero_max_with_explicit_plan_makes_no_request():
     assert summary["requests_made"]==0
     assert summary["sampled_directed_edges"]==0
     assert snap[1][2][4]["traffic_status"]=="missing"
+
+
+def test_planner_prioritizes_primary_over_near_residential():
+
+    g = nx.MultiDiGraph(crs="EPSG:4326")
+
+    g.add_node(1, x=-0.180, y=51.5000)
+    g.add_node(2, x=-0.179, y=51.5000)
+
+    g.add_node(3, x=-0.180, y=51.5002)
+    g.add_node(4, x=-0.179, y=51.5002)
+
+    g.add_edge(
+        1, 2, key=0,
+        length=70,
+        highway="residential",
+    )
+
+    g.add_edge(
+        3, 4, key=0,
+        length=70,
+        highway="primary",
+    )
+
+    plan = plan_corridor_probes(
+        g,
+        max_probes=1,
+        origins={"A": (51.5, -0.180)},
+        destination=(51.5, -0.179),
+        corridor_width_m=150,
+        min_spacing_m=0,
+    )
+
+    assert len(plan) == 1
+    assert plan[0]["road_class"] == "primary"
+
+
+def test_planner_avoids_repeatedly_failing_edge():
+
+    g = nx.MultiDiGraph(crs="EPSG:4326")
+
+    g.add_node(1, x=-0.180, y=51.5000)
+    g.add_node(2, x=-0.179, y=51.5000)
+
+    g.add_node(3, x=-0.180, y=51.5002)
+    g.add_node(4, x=-0.179, y=51.5002)
+
+    g.add_edge(
+        1, 2, key=0,
+        length=70,
+        highway="secondary",
+    )
+
+    g.add_edge(
+        3, 4, key=0,
+        length=70,
+        highway="secondary",
+    )
+
+    history = {
+        "schema_version": 1,
+        "edges": {
+            "1|2|0": {
+                "attempts": 3,
+                "direct_usable": 0,
+                "reverse_rescued": 0,
+                "global_errors": 0,
+                "point_errors": 3,
+            }
+        },
+        "runs": [],
+    }
+
+    plan = plan_corridor_probes(
+        g,
+        max_probes=1,
+        origins={"A": (51.5, -0.180)},
+        destination=(51.5, -0.179),
+        corridor_width_m=150,
+        min_spacing_m=0,
+        history=history,
+    )
+
+    assert len(plan) == 1
+    assert plan[0]["edge_id"] == (3, 4, 0)
