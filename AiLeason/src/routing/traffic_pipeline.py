@@ -33,17 +33,24 @@ def _positive(value: object) -> float | None:
     except (TypeError, ValueError, OverflowError):
         return None
     return number if math.isfinite(number) and number > 0 else None
-
-
 def _initialize_costs(graph: nx.MultiDiGraph) -> None:
-    """Initialize every directed edge with explicit missing/imputed traffic costs."""
+    """
+    Initialize missing traffic attributes without overwriting
+    previously collected traffic observations.
+
+    Existing valid observations are preserved across collection batches.
+    New OSM edges receive fallback routing costs.
+    """
+
     fallback_speed = float(DEFAULT_UNOBSERVED_SPEED_KPH)
+
     if not math.isfinite(fallback_speed) or fallback_speed <= 0:
         raise ValueError(
             "DEFAULT_UNOBSERVED_SPEED_KPH must be finite and positive"
         )
 
     for _, _, _, edge in graph.edges(keys=True, data=True):
+
         try:
             length = float(edge["length"])
         except (KeyError, TypeError, ValueError, OverflowError) as exc:
@@ -57,26 +64,33 @@ def _initialize_costs(graph: nx.MultiDiGraph) -> None:
             )
 
         assumed_time = 3.6 * length / fallback_speed
-        edge.update(
-            traffic_status="missing",
-            traffic_reason="not_queried",
-            traffic_sampled=False,
-            traffic_directly_queried=False,
-            traffic_matched=False,
-            traffic_match_reason=None,
-            traffic_match_source=None,
-            direction_match_method=None,
-            traffic_confidence=None,
-            current_speed_kph=None,
-            free_flow_speed_kph=None,
-            fallback_speed_kph=fallback_speed,
-            free_flow_time_s=assumed_time,
-            travel_time_s=assumed_time,
-            free_flow_is_imputed=True,
-            time_is_imputed=True,
-            is_closed=False,
-            traffic_probe_edge_id=None,
-        )
+
+        # IMPORTANT:
+        # setdefault preserves previously collected observations.
+
+        defaults = {
+            "traffic_status": "missing",
+            "traffic_reason": "not_queried",
+            "traffic_sampled": False,
+            "traffic_directly_queried": False,
+            "traffic_matched": False,
+            "traffic_match_reason": None,
+            "traffic_match_source": None,
+            "direction_match_method": None,
+            "traffic_confidence": None,
+            "current_speed_kph": None,
+            "free_flow_speed_kph": None,
+            "fallback_speed_kph": fallback_speed,
+            "free_flow_time_s": assumed_time,
+            "travel_time_s": assumed_time,
+            "free_flow_is_imputed": True,
+            "time_is_imputed": True,
+            "is_closed": False,
+            "traffic_probe_edge_id": None,
+        }
+
+        for key, value in defaults.items():
+            edge.setdefault(key, value)
 
 
 def _edge_id_text(edge_id: tuple) -> str:
@@ -332,9 +346,8 @@ def collect_traffic_snapshot(
         raise ValueError("pause_s must be numeric") from exc
     if not math.isfinite(pause_s) or pause_s < 0:
         raise ValueError("pause_s must be finite and non-negative")
-
     graph = osm_graph.copy()
-    _initialize_costs(graph)
+    _initialize_costs(graph, preserve_existing=True)
 
     transformer = Transformer.from_crs(
         "EPSG:4326", "EPSG:27700", always_xy=True
