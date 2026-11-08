@@ -7,7 +7,7 @@ import networkx as nx
 from pyproj import Transformer
 from shapely.geometry import LineString, Point
 
-from .config import ORIGINS, DESTINATION
+from .config import ORIGINS, DESTINATION, MIN_PROBE_EDGE_LENGTH_M
 from .map_matching import directed_osm_line
 
 
@@ -158,7 +158,7 @@ def plan_corridor_probes(
     origins: Mapping[str, tuple[float, float]] | None = None,
     destination: tuple[float, float] = DESTINATION,
     corridor_width_m: float = 350.0,
-    min_length_m: float = 35.0,
+    min_length_m: float = MIN_PROBE_EDGE_LENGTH_M,
     min_spacing_m: float = 65.0,
     history: Mapping | None = None,
 ) -> list[dict]:
