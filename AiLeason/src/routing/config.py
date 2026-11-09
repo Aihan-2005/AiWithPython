@@ -12,10 +12,10 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 RESULTS_DIR = PROJECT_ROOT / "data" / "results"
-GRAPH_PATH = RAW_DIR / "south_kensington_drive.graphml"
-
 MAP_CENTER = (51.4994, -0.1760)
-MAP_RADIUS_M = 1200
+# Use the same 2 km road network in every notebook and in the saved traffic snapshot.
+MAP_RADIUS_M = 2000
+GRAPH_PATH = RAW_DIR / f"south_kensington_drive_{MAP_RADIUS_M}m.graphml"
 
 ORIGIN = (51.4946, -0.1742)
 ORIGINS = {

@@ -165,6 +165,15 @@ def update_probe_history(
 
         elif reason in {
             "geometry_or_heading_mismatch",
+            "heading_proxy_mismatch",
+            "midpoint_too_far",
+            "probe_point_too_far",
+            "insufficient_overlap",
+            "insufficient_local_geometry",
+            "short_segment",
+            "invalid_tomtom_geometry",
+            "geometry_transform_error",
+            "osm_edge_not_found",
             "ambiguous_reverse_match",
         }:
             item["geometry_failures"] += 1

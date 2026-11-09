@@ -21,10 +21,15 @@ def load_road_graph(force_download: bool = False, *, radius_m: int | None = None
         graph = ox.io.load_graphml(path)
     else:
         graph = ox.graph.graph_from_point(
-            MAP_CENTER, dist=radius, network_type="drive", simplify=True, retain_all=False
+            MAP_CENTER,
+            dist=radius,
+            network_type="drive",
+            simplify=True,
+            retain_all=False,
         )
         graph.graph["routing_source_radius_m"] = radius
         ox.io.save_graphml(graph, path)
+    graph.graph.setdefault("routing_source_radius_m", radius)
     if not isinstance(graph, nx.MultiDiGraph) or not graph.is_directed():
         raise TypeError("Expected directed MultiDiGraph")
     if not all("length" in attrs for *_, attrs in graph.edges(keys=True, data=True)):
